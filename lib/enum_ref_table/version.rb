@@ -1,4 +1,4 @@
-module EnumTable
+module EnumRefTable
   VERSION = [0, 2, 1]
 
   class << VERSION

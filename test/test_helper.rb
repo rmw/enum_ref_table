@@ -3,9 +3,9 @@ $:.unshift "#{ROOT}/lib"
 
 require 'minitest/spec'
 require 'active_record'
-require 'enum_table'
+require 'enum_ref_table'
 
-ADAPTER = ENV['ENUM_TABLE_ADAPTER'] || 'sqlite3'
+ADAPTER = ENV['ENUM_REF_TABLE_ADAPTER'] || 'sqlite3'
 CONFIG = YAML.load_file("#{ROOT}/test/database.yml")[ADAPTER].merge(adapter: ADAPTER)
 case ADAPTER
 when /sqlite/

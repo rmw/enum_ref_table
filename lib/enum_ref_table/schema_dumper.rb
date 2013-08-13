@@ -1,18 +1,18 @@
-module EnumTable
+module EnumRefTable
   module SchemaDumper
     extend ActiveSupport::Concern
 
     included do
-      alias_method_chain :tables, :enum_table
-      alias_method_chain :ignore_tables, :enum_table
+      alias_method_chain :tables, :enum_ref_table
+      alias_method_chain :ignore_tables, :enum_ref_table
     end
 
-    def tables_with_enum_table(stream)
-      tables_without_enum_table(stream)
-      table_names = @connection.enum_tables
+    def tables_with_enum_ref_table(stream)
+      tables_without_enum_ref_table(stream)
+      table_names = @connection.enum_ref_tables
       table_names.each do |table_name|
-        stream.puts "  create_enum_table #{table_name.inspect}, force: true do |t|"
-        enum_table_column(stream, table_name, 'value', SchemaStatements::DEFAULT_VALUE_ATTRIBUTES)
+        stream.puts "  create_enum_ref_table #{table_name.inspect}, force: true do |t|"
+        enum_ref_table_column(stream, table_name, 'value', SchemaStatements::DEFAULT_VALUE_ATTRIBUTES)
         @connection.execute("SELECT id, value FROM #{@connection.quote_table_name table_name} ORDER BY id").each do |row|
           stream.puts "    t.add #{row[1].to_s.inspect}, #{row[0]}"
         end
@@ -21,13 +21,13 @@ module EnumTable
       end
     end
 
-    def ignore_tables_with_enum_table
-      ignore_tables_without_enum_table + @connection.enum_tables << 'enum_tables'
+    def ignore_tables_with_enum_ref_table
+      ignore_tables_without_enum_ref_table + @connection.enum_ref_tables << 'enum_ref_tables'
     end
 
     private
 
-    def enum_table_column(stream, table_name, column_name, defaults)
+    def enum_ref_table_column(stream, table_name, column_name, defaults)
       column = @connection.columns(table_name).find { |c| c.name == column_name }
       custom_attributes = {}
       COLUMN_ATTRIBUTES.each do |attribute|
@@ -45,6 +45,6 @@ module EnumTable
   end
 end
 
-# This is not loaded in enum_table.rb as it's only needed when dumping the
+# This is not loaded in enum_ref_table.rb as it's only needed when dumping the
 # schema. Instead, we make rake tasks load this file explicitly.
-ActiveRecord::SchemaDumper.send :include, EnumTable::SchemaDumper
+ActiveRecord::SchemaDumper.send :include, EnumRefTable::SchemaDumper
