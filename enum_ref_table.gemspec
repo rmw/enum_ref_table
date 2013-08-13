@@ -1,16 +1,16 @@
 # -*- encoding: utf-8 -*-
 $:.unshift File.expand_path('lib', File.dirname(__FILE__))
-require 'enum_table/version'
+require 'enum_ref_table/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = 'enum_table'
-  gem.version       = EnumTable::VERSION
+  gem.name          = 'enum_ref_table'
+  gem.version       = EnumRefTable::VERSION
   gem.authors       = ['George Ogata']
   gem.email         = ['george.ogata@gmail.com']
   gem.license       = 'MIT'
   gem.date          = Time.now.strftime('%Y-%m-%d')
-  gem.summary       = "Enumeration tables for ActiveRecord"
-  gem.homepage      = 'http://github.com/howaboutwe/enum_table'
+  gem.summary       = "Enumeration Reference tables for ActiveRecord"
+  gem.homepage      = 'http://github.com/rmw/enum_ref_table'
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")

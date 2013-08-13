@@ -1,4 +1,4 @@
-module EnumTable
+module EnumRefTable
   class Reflection
     def initialize(name, options={})
       @name = name

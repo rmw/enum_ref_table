@@ -1,30 +1,30 @@
-module EnumTable
+module EnumRefTable
   module SchemaStatements
-    def create_enum_table(table_name, options={})
+    def create_enum_ref_table(table_name, options={})
       table = NewTable.new(self, table_name, options)
       yield table if block_given?
       table._create
-      enum_tables_updated
+      enum_ref_tables_updated
     end
 
-    def change_enum_table(table_name)
+    def change_enum_ref_table(table_name)
       yield Table.new(self, table_name)
     end
 
-    def drop_enum_table(table_name)
+    def drop_enum_ref_table(table_name)
       drop_table table_name
-      execute "DELETE FROM enum_tables WHERE table_name = #{quote table_name}"
-      enum_tables_updated
+      execute "DELETE FROM enum_ref_tables WHERE table_name = #{quote table_name}"
+      enum_ref_tables_updated
     end
 
-    def enum_tables
-      return [] if !table_exists?('enum_tables')
-      @enum_tables ||= execute("SELECT table_name FROM enum_tables").
+    def enum_ref_tables
+      return [] if !table_exists?('enum_ref_tables')
+      @enum_ref_tables ||= execute("SELECT table_name FROM enum_ref_tables").
         map { |row| row[0] }.sort
     end
 
-    def enum_tables_updated
-      @enum_tables = nil
+    def enum_ref_tables_updated
+      @enum_ref_tables = nil
     end
 
     DEFAULT_VALUE_ATTRIBUTES = {type: :string, limit: 255, null: false}.freeze
@@ -44,12 +44,12 @@ module EnumTable
         @connection.create_table @name, @options do |t|
           t.column :value, @value.delete(:type), @value
         end
-        unless @connection.table_exists?(:enum_tables)
-          @connection.create_table :enum_tables, id: false, force: true do |t|
+        unless @connection.table_exists?(:enum_ref_tables)
+          @connection.create_table :enum_ref_tables, id: false, force: true do |t|
             t.string :table_name, null: false, limit: 255
           end
         end
-        @connection.execute "INSERT INTO enum_tables(table_name) VALUES(#{@connection.quote @name})"
+        @connection.execute "INSERT INTO enum_ref_tables(table_name) VALUES(#{@connection.quote @name})"
         table = Table.new(@connection, @name, 0)
         @adds.each { |args| table.add(*args) }
       end

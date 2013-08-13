@@ -1,6 +1,6 @@
-## Enum Table
+## Enum Ref Table
 
-Table-based enumerations for ActiveRecord.
+Table-based enumerations (references) for ActiveRecord.
 
 ## What?
 
@@ -42,7 +42,7 @@ DML statements, which do not require rebuilding any tables.
 
 Create your enum tables in migrations. Example:
 
-    create_enum_table :user_genders do |t|
+    create_enum_ref_table :user_genders do |t|
       t.add :male
       t.add :female
     end
@@ -58,7 +58,7 @@ Then in your model:
     end
 
 Note the convention: for a model `User` with enum `gender`, the column is
-`users.gender_id`, and the enum_table is `user_genders`. You can override these
+`users.gender_id`, and the enum_ref_table is `user_genders`. You can override these
 with the `:id_name` and `:table` options:
 
     enum :gender, id_name: :sex_id, table: :sexes
@@ -69,7 +69,7 @@ While the names `id` and `value` are fixed, you can change other attributes of
 the column. For example, the ID has `limit: 1` by default, but you can change
 this if you have a large list of enum values:
 
-    create_enum_table :user_countries do |t|
+    create_enum_ref_table :user_countries do |t|
       t.id limit: 2
       t.add 'Afghanistan'
       t.add 'Albania'
@@ -79,7 +79,7 @@ this if you have a large list of enum values:
 Similarly you can customize the `value` column, say if you want to place a
 varchar limit:
 
-    create_enum_table :user_countries do |t|
+    create_enum_ref_table :user_countries do |t|
       t.value limit: 100
       # ...
     end
@@ -88,17 +88,17 @@ varchar limit:
 
 To change the list of enums:
 
-    change_enum_table :user_genders do |t|
+    change_enum_ref_table :user_genders do |t|
       t.add :other
       t.remove :male
     end
 
 To drop an enum table:
 
-    drop_enum_table :user_genders
+    drop_enum_ref_table :user_genders
 
-Under the hood, `create_enum_table` and `drop_enum_table` maintain the list of
-enum tables in the `enum_tables` table. This allows the table data to be tracked
+Under the hood, `create_enum_ref_table` and `drop_enum_ref_table` maintain the list of
+enum tables in the `enum_ref_tables` table. This allows the table data to be tracked
 by `db/schema.rb` so it gets copied to your test database.
 
 ### Hardcoded mappings
@@ -125,8 +125,8 @@ it less disruptive to use strings instead. Do that with the `:type` option:
 
 ## Contributing
 
- * [Bug reports](https://github.com/howaboutwe/enum_table/issues)
- * [Source](https://github.com/howaboutwe/enum_table)
+ * [Bug reports](https://github.com/rmw/enum_ref_table/issues)
+ * [Source](https://github.com/rmw/enum_ref_table)
  * Patches: Fork on Github, send pull request.
    * Include tests where practical.
    * Leave the version alone, or bump it in a separate commit.
