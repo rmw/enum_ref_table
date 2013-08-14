@@ -1,3 +1,6 @@
+This is a mirror of [enum_table](http://github.com/howaboutwe/enum_table) renamed to not conflict
+with existing [plugins][enum_column3].
+
 ## Enum Ref Table
 
 Table-based enumerations (references) for ActiveRecord.
@@ -30,7 +33,7 @@ database directly. Another problem is the database cannot enforce any
 [referential integrity][foreigner].
 
 This plugin implements a different strategy which solves the above problems -
-each enum is defined by a table with `id` and `value` columns, which defines the
+each enum_ref is defined by a table with `id` and `value` columns, which defines the
 values and the integers they map to. Altering the values can be done with simple
 DML statements, which do not require rebuilding any tables.
 
@@ -40,34 +43,34 @@ DML statements, which do not require rebuilding any tables.
 
 ## Usage
 
-Create your enum tables in migrations. Example:
+Create your enum_ref tables in migrations. Example:
 
     create_enum_ref_table :user_genders do |t|
       t.add :male
       t.add :female
     end
 
-Then add the enum ID to your model table:
+Then add the enum_ref ID to your model table:
 
     add_column :users, :gender_id, null: false
 
 Then in your model:
 
     class User < ActiveRecord::Base
-      enum :gender
+      enum_ref :gender
     end
 
-Note the convention: for a model `User` with enum `gender`, the column is
+Note the convention: for a model `User` with enum_ref `gender`, the column is
 `users.gender_id`, and the enum_ref_table is `user_genders`. You can override these
 with the `:id_name` and `:table` options:
 
-    enum :gender, id_name: :sex_id, table: :sexes
+    enum_ref :gender, id_name: :sex_id, table: :sexes
 
 ### Custom columns
 
 While the names `id` and `value` are fixed, you can change other attributes of
 the column. For example, the ID has `limit: 1` by default, but you can change
-this if you have a large list of enum values:
+this if you have a large list of enum_ref values:
 
     create_enum_ref_table :user_countries do |t|
       t.id limit: 2
@@ -84,21 +87,21 @@ varchar limit:
       # ...
     end
 
-### Updating enums
+### Updating enum_refs
 
-To change the list of enums:
+To change the list of enum_refs:
 
     change_enum_ref_table :user_genders do |t|
       t.add :other
       t.remove :male
     end
 
-To drop an enum table:
+To drop an enum_ref table:
 
     drop_enum_ref_table :user_genders
 
 Under the hood, `create_enum_ref_table` and `drop_enum_ref_table` maintain the list of
-enum tables in the `enum_ref_tables` table. This allows the table data to be tracked
+enum_ref tables in the `enum_ref_tables` table. This allows the table data to be tracked
 by `db/schema.rb` so it gets copied to your test database.
 
 ### Hardcoded mappings
@@ -106,11 +109,11 @@ by `db/schema.rb` so it gets copied to your test database.
 If you really want, you can forego the table completely and just hardcode the
 ids and values in your model:
 
-    enum :genders, table: {male: 1, female: 2}
+    enum_ref :genders, table: {male: 1, female: 2}
 
 Or since our IDs are 1-based and sequential:
 
-    enum :genders, table: [:male, :female]
+    enum_ref :genders, table: [:male, :female]
 
 Of course, by not using tables, you lose some of the advantages mentioned
 earlier, namely a self-documenting database and referential integrity.
@@ -121,7 +124,7 @@ By default, `user.gender` will be either the symbol `:male` or `:female`. If
 you're transitioning from using old-fashioned `varchar`s, however, you may find
 it less disruptive to use strings instead. Do that with the `:type` option:
 
-    enum :genders, type: :string
+    enum_ref :genders, type: :string
 
 ## Contributing
 
